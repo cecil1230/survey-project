@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家长调查问卷 | Parent Survey</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .header h1 { font-size: 2em; margin-bottom: 10px; }
+        .back-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+        }
+        .survey-form {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .question {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .question:last-child { border-bottom: none; }
+        .question-text {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .option {
+            flex: 1 1 calc(50% - 10px);
+            min-width: 200px;
+        }
+        .option input { display: none; }
+        .option label {
+            display: block;
+            padding: 12px 15px;
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .option label:hover {
+            background: #e8e8e8;
+            border-color: #ccc;
+        }
+        .option input:checked + label {
+            background: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        .submit-btn:hover {
+            filter: brightness(1.1);
+        }
+        .google-form-note {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #856404;
+        }
+        .progress {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            background: #ff6b6b;
+            border-radius: 10px;
+            height: 100%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back | 返回</a>
+        <div class="header">
+            <div style="font-size: 3em; margin-bottom: 10px;">👨‍👩‍👧</div>
+            <h1>家长调查问卷</h1>
+            <p>Parent Survey</p>
+        </div>
+        
+        <div class="survey-form">
+            <div class="progress">
+                <div class="progress-bar" id="progress" style="width: 0%"></div>
+            </div>
+            
+            <form id="surveyForm">
+
+                <div class="question">
+                    <div class="question-text"><strong>Q1.</strong> Leaders regularly evaluate instructional programs and organizational conditions to improve instruction and advance learning. <br>学校领导会定期评估教学计划和组织状况，以优化教学并推动学习进步。</div>
+                    <div class="options">
+
+                        <div class="option">
+                            <input type="radio" name="q1" id="q1_5" value="5" required>
+                            <label for="q1_5">Strongly agree / 强烈同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q1" id="q1_4" value="4" required>
+                            <label for="q1_4">Agree / 同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q1" id="q1_3" value="3" required>
+                            <label for="q1_3">Neutral / 既不同意也不反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q1" id="q1_2" value="2" required>
+                            <label for="q1_2">Disagree / 反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q1" id="q1_1" value="1" required>
+                            <label for="q1_1">Strongly disagree / 强烈反对</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text"><strong>Q2.</strong> Learners are immersed in an environment that fosters lifelong skills. <br>学习者沉浸在一种个培养终身技能的环境中。</div>
+                    <div class="options">
+
+                        <div class="option">
+                            <input type="radio" name="q2" id="q2_5" value="5" required>
+                            <label for="q2_5">Strongly agree / 强烈同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q2" id="q2_4" value="4" required>
+                            <label for="q2_4">Agree / 同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q2" id="q2_3" value="3" required>
+                            <label for="q2_3">Neutral / 既不同意也不反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q2" id="q2_2" value="2" required>
+                            <label for="q2_2">Disagree / 反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q2" id="q2_1" value="1" required>
+                            <label for="q2_1">Strongly disagree / 强烈反对</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text"><strong>Q3.</strong> Learners had lessons that prepared them for the future. <br>学习者接受了为未来做准备的课程。</div>
+                    <div class="options">
+
+                        <div class="option">
+                            <input type="radio" name="q3" id="q3_5" value="5" required>
+                            <label for="q3_5">Strongly agree / 强烈同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q3" id="q3_4" value="4" required>
+                            <label for="q3_4">Agree / 同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q3" id="q3_3" value="3" required>
+                            <label for="q3_3">Neutral / 既不同意也不反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q3" id="q3_2" value="2" required>
+                            <label for="q3_2">Disagree / 反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q3" id="q3_1" value="1" required>
+                            <label for="q3_1">Strongly disagree / 强烈反对</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text"><strong>Q4.</strong> Learners are immersed in an environment that promotes and respects student voice and responsibility for their learning. <br>学习者沉浸在一种鼓励并尊重学生发声并承担学习责任的环境中。</div>
+                    <div class="options">
+
+                        <div class="option">
+                            <input type="radio" name="q4" id="q4_5" value="5" required>
+                            <label for="q4_5">Strongly agree / 强烈同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q4" id="q4_4" value="4" required>
+                            <label for="q4_4">Agree / 同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q4" id="q4_3" value="3" required>
+                            <label for="q4_3">Neutral / 既不同意也不反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q4" id="q4_2" value="2" required>
+                            <label for="q4_2">Disagree / 反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q4" id="q4_1" value="1" required>
+                            <label for="q4_1">Strongly disagree / 强烈反对</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text"><strong>Q5.</strong> Learners had opportunities to share their opinions about their learning activities. <br>学习者有机会分享他们对学习活动的看法。</div>
+                    <div class="options">
+
+                        <div class="option">
+                            <input type="radio" name="q5" id="q5_5" value="5" required>
+                            <label for="q5_5">Strongly agree / 强烈同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q5" id="q5_4" value="4" required>
+                            <label for="q5_4">Agree / 同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q5" id="q5_3" value="3" required>
+                            <label for="q5_3">Neutral / 既不同意也不反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q5" id="q5_2" value="2" required>
+                            <label for="q5_2">Disagree / 反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q5" id="q5_1" value="1" required>
+                            <label for="q5_1">Strongly disagree / 强烈反对</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text"><strong>Q6.</strong> Instruction is characterized by high expectations and learner-centered practices. <br>高期望和以学习者为中心是教学活动的重要特点。</div>
+                    <div class="options">
+
+                        <div class="option">
+                            <input type="radio" name="q6" id="q6_5" value="5" required>
+                            <label for="q6_5">Strongly agree / 强烈同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q6" id="q6_4" value="4" required>
+                            <label for="q6_4">Agree / 同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q6" id="q6_3" value="3" required>
+                            <label for="q6_3">Neutral / 既不同意也不反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q6" id="q6_2" value="2" required>
+                            <label for="q6_2">Disagree / 反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q6" id="q6_1" value="1" required>
+                            <label for="q6_1">Strongly disagree / 强烈反对</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text"><strong>Q7.</strong> Learners' needs drive the allocation of resources. <br>会根据学习者的需求分配教学资源。</div>
+                    <div class="options">
+
+                        <div class="option">
+                            <input type="radio" name="q7" id="q7_5" value="5" required>
+                            <label for="q7_5">Strongly agree / 强烈同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q7" id="q7_4" value="4" required>
+                            <label for="q7_4">Agree / 同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q7" id="q7_3" value="3" required>
+                            <label for="q7_3">Neutral / 既不同意也不反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q7" id="q7_2" value="2" required>
+                            <label for="q7_2">Disagree / 反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q7" id="q7_1" value="1" required>
+                            <label for="q7_1">Strongly disagree / 强烈反对</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text"><strong>Q8.</strong> Resources children need for learning are provided. <br>提供孩子们学习所需的资源。</div>
+                    <div class="options">
+
+                        <div class="option">
+                            <input type="radio" name="q8" id="q8_5" value="5" required>
+                            <label for="q8_5">Strongly agree / 强烈同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q8" id="q8_4" value="4" required>
+                            <label for="q8_4">Agree / 同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q8" id="q8_3" value="3" required>
+                            <label for="q8_3">Neutral / 既不同意也不反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q8" id="q8_2" value="2" required>
+                            <label for="q8_2">Disagree / 反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q8" id="q8_1" value="1" required>
+                            <label for="q8_1">Strongly disagree / 强烈反对</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text"><strong>Q9.</strong> Teachers use digital resources to improve learning. <br>教师会使用数字资源来改善学习体验。</div>
+                    <div class="options">
+
+                        <div class="option">
+                            <input type="radio" name="q9" id="q9_5" value="5" required>
+                            <label for="q9_5">Strongly agree / 强烈同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q9" id="q9_4" value="4" required>
+                            <label for="q9_4">Agree / 同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q9" id="q9_3" value="3" required>
+                            <label for="q9_3">Neutral / 既不同意也不反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q9" id="q9_2" value="2" required>
+                            <label for="q9_2">Disagree / 反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q9" id="q9_1" value="1" required>
+                            <label for="q9_1">Strongly disagree / 强烈反对</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text"><strong>Q10.</strong> Teachers use many types of information to help children learn. <br>教师会使用多种类型的信息来帮助孩子学习。</div>
+                    <div class="options">
+
+                        <div class="option">
+                            <input type="radio" name="q10" id="q10_5" value="5" required>
+                            <label for="q10_5">Strongly agree / 强烈同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q10" id="q10_4" value="4" required>
+                            <label for="q10_4">Agree / 同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q10" id="q10_3" value="3" required>
+                            <label for="q10_3">Neutral / 既不同意也不反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q10" id="q10_2" value="2" required>
+                            <label for="q10_2">Disagree / 反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q10" id="q10_1" value="1" required>
+                            <label for="q10_1">Strongly disagree / 强烈反对</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text"><strong>Q11.</strong> They take time to connect with me as a collaborator to improve learners' academic growth. <br>教师会花时间与我沟通合作，以提高学习者的学术成长。</div>
+                    <div class="options">
+
+                        <div class="option">
+                            <input type="radio" name="q11" id="q11_5" value="5" required>
+                            <label for="q11_5">Strongly agree / 强烈同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q11" id="q11_4" value="4" required>
+                            <label for="q11_4">Agree / 同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q11" id="q11_3" value="3" required>
+                            <label for="q11_3">Neutral / 既不同意也不反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q11" id="q11_2" value="2" required>
+                            <label for="q11_2">Disagree / 反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q11" id="q11_1" value="1" required>
+                            <label for="q11_1">Strongly disagree / 强烈反对</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text"><strong>Q12.</strong> They are committed to trying new things to improve the school. <br>教师致力于尝试新鲜事物以提升学校。</div>
+                    <div class="options">
+
+                        <div class="option">
+                            <input type="radio" name="q12" id="q12_5" value="5" required>
+                            <label for="q12_5">Strongly agree / 强烈同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q12" id="q12_4" value="4" required>
+                            <label for="q12_4">Agree / 同意</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q12" id="q12_3" value="3" required>
+                            <label for="q12_3">Neutral / 既不同意也不反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q12" id="q12_2" value="2" required>
+                            <label for="q12_2">Disagree / 反对</label>
+                        </div>
+
+                        <div class="option">
+                            <input type="radio" name="q12" id="q12_1" value="1" required>
+                            <label for="q12_1">Strongly disagree / 强烈反对</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit | 提交</button>
+            </form>
+            
+            <div class="google-form-note" style="background: #d4edda; border: 2px solid #28a745;">
+                <strong>✅ Google Form 已连接 | Google Form Connected</strong><br><br>
+                点击下方按钮提交到 Google Form：<br>
+                Click the button below to submit to Google Form:<br><br>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdersz2FqUU0289D50NgDSO9BwP5-00FndQ-s-_pEEH0T1DZw/viewform" 
+                   target="_blank" 
+                   style="display: inline-block; padding: 12px 24px; background: #28a745; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                   📝 提交到 Google Form | Submit to Google Form
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const form = document.getElementById('surveyForm');
+        const progress = document.getElementById('progress');
+        
+        form.addEventListener('change', () => {
+            const answered = form.querySelectorAll('input:checked').length;
+            const total = 12;
+            progress.style.width = (answered / total * 100) + '%';
+        });
+        
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const responses = {};
+            for (let [key, value] of formData.entries()) {
+                responses[key] = value;
+            }
+            
+            // Save to localStorage
+            const surveyType = 'parent';
+            const existing = JSON.parse(localStorage.getItem('survey_responses') || '{}');
+            if (!existing[surveyType]) existing[surveyType] = [];
+            existing[surveyType].push({
+                timestamp: new Date().toISOString(),
+                responses: responses
+            });
+            localStorage.setItem('survey_responses', JSON.stringify(existing));
+            
+            alert('Thank you! | 谢谢您的参与！\n\nYour response has been saved.\n您的回复已保存。');
+            form.reset();
+            progress.style.width = '0%';
+            
+            // Show analysis (for demo)
+            showAnalysis(responses);
+        });
+        
+        function showAnalysis(responses) {
+            const labels = {'5': 'Strongly Agree', '4': 'Agree', '3': 'Neutral', '2': 'Disagree', '1': 'Strongly Disagree'};
+            const labelsZh = {'5': '强烈同意', '4': '同意', '3': '既不同意也不反对', '2': '反对', '1': '强烈反对'};
+            
+            let analysis = '\n📊 Quick Analysis | 快速分析:\n\n';
+            let total = 0, sum = 0;
+            
+            for (let [q, v] of Object.entries(responses)) {
+                sum += parseInt(v);
+                total++;
+            }
+            
+            const avg = total > 0 ? (sum / total).toFixed(2) : 0;
+            let rating = avg >= 4.5 ? 'Excellent | 优秀' : avg >= 3.5 ? 'Good | 良好' : avg >= 2.5 ? 'Average | 一般' : 'Needs Improvement | 需要改进';
+            
+            alert(analysis + `Average Score: ${avg}/5 (${rating})`);
+        }
+    </script>
+</body>
+</html>
