@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+      background: #f5f7fa;
+      padding: 20px;
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 16px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .header h1 { font-size: 2em; margin-bottom: 10px; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .card h2 {
+      font-size: 1.3em;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .stat-number {
+      font-size: 3em;
+      font-weight: bold;
+      color: #667eea;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .stat-label {
+      text-align: center;
+      color: #666;
+      font-size: 0.9em;
+    }
+    .rating {
+      display: inline-block;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .rating.excellent { background: #d4edda; color: #155724; }
+    .rating.good { background: #cce5ff; color: #004085; }
+    .rating.average { background: #fff3cd; color: #856404; }
+    .rating.poor { background: #f8d7da; color: #721c24; }
+    .bar-chart {
+      margin: 15px 0;
+    }
+    .bar-row {
+      display: flex;
+      align-items: center;
+      margin: 8px 0;
+    }
+    .bar-label {
+      width: 120px;
+      font-size: 0.85em;
+      color: #555;
+    }
+    .bar-container {
+      flex: 1;
+      height: 24px;
+      background: #e9ecef;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 12px;
+      transition: width 0.5s;
+    }
+    .bar-fill.s5 { background: #28a745; }
+    .bar-fill.s4 { background: #17a2b8; }
+    .bar-fill.s3 { background: #ffc107; }
+    .bar-fill.s2 { background: #fd7e14; }
+    .bar-fill.s1 { background: #dc3545; }
+    .bar-value {
+      width: 50px;
+      text-align: right;
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+    .question-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    .question-table th, .question-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    .question-table th {
+      background: #f8f9fa;
+      font-weight: 600;
+    }
+    .question-table .score {
+      font-weight: bold;
+      color: #667eea;
+    }
+    .question-table .score.high { color: #28a745; }
+    .question-table .score.medium { color: #ffc107; }
+    .question-table .score.low { color: #dc3545; }
+    .loading {
+      text-align: center;
+      padding: 50px;
+      color: #666;
+    }
+    .refresh-btn {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    .refresh-btn:hover { background: #5568d3; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📊 Survey Analysis Dashboard</h1>
+    <p>调查分析报告 | Mid-Cycle Report</p>
+  </div>
+  
+  <div style="text-align: center; margin-bottom: 20px;">
+    <button class="refresh-btn" onclick="loadData()">🔄 Refresh | 刷新</button>
+  </div>
+  
+  <div id="content" class="loading">
+    Loading... 加载中...
+  </div>
+
+  <script>
+    function loadData() {
+      document.getElementById('content').innerHTML = '<div class="loading">Loading... 加载中...</div>';
+      google.script.run.withSuccessHandler(displayData).withFailureHandler(showError).getSheetData();
+    }
+    
+    function displayData(data) {
+      let html = '<div class="cards">';
+      
+      const surveys = {
+        'Parent': { icon: '👨‍👩‍👧', color: '#ff6b6b' },
+        'Teacher': { icon: '👨‍🏫', color: '#4ecdc4' },
+        'Student': { icon: '🎒', color: '#45b7d1' }
+      };
+      
+      for (const [type, info] of Object.entries(surveys)) {
+        const stats = calculateAnalysis(data[type]?.responses || [], data[type]?.headers || []);
+        
+        html += `
+          <div class="card">
+            <h2>${info.icon} ${type} Survey</h2>
+            <div class="stat-number">${stats ? stats.average : '-'}</div>
+            <div class="stat-label">Average Score | 平均分 (out of 5)</div>
+            ${stats ? `<div class="rating ${getRatingClass(stats.average)}">${stats.rating}</div>` : ''}
+            
+            ${stats ? `
+            <div class="bar-chart">
+              <div class="bar-row">
+                <span class="bar-label">Strongly Agree</span>
+                <div class="bar-container"><div class="bar-fill s5" style="width: ${getPercent(stats.distribution['5'], stats.total)}%"></div></div>
+                <span class="bar-value">${stats.distribution['5'] || 0}</span>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Agree</span>
+                <div class="bar-container"><div class="bar-fill s4" style="width: ${getPercent(stats.distribution['4'], stats.total)}%"></div></div>
+                <span class="bar-value">${stats.distribution['4'] || 0}</span>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Neutral</span>
+                <div class="bar-container"><div class="bar-fill s3" style="width: ${getPercent(stats.distribution['3'], stats.total)}%"></div></div>
+                <span class="bar-value">${stats.distribution['3'] || 0}</span>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Disagree</span>
+                <div class="bar-container"><div class="bar-fill s2" style="width: ${getPercent(stats.distribution['2'], stats.total)}%"></div></div>
+                <span class="bar-value">${stats.distribution['2'] || 0}</span>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">Strongly Disagree</span>
+                <div class="bar-container"><div class="bar-fill s1" style="width: ${getPercent(stats.distribution['1'], stats.total)}%"></div></div>
+                <span class="bar-value">${stats.distribution['1'] || 0}</span>
+              </div>
+            </div>
+            <p style="text-align: center; color: #666; font-size: 0.9em;">Total Responses: ${stats.total || 0}</p>
+            ` : '<p style="text-align: center; color: #999;">No data yet</p>'}
+          </div>
+        `;
+      }
+      
+      html += '</div>';
+      
+      // Add question-level analysis for each survey
+      for (const [type, info] of Object.entries(surveys)) {
+        const stats = calculateAnalysis(data[type]?.responses || [], data[type]?.headers || []);
+        if (stats && stats.questionAvg.length > 0) {
+          html += `
+            <div class="card" style="margin-top: 20px;">
+              <h2>${info.icon} ${type} - Question Breakdown | 问题分析</h2>
+              <table class="question-table">
+                <tr><th>#</th><th>Question | 问题</th><th>Avg</th></tr>
+          `;
+          stats.questionAvg.forEach((q, i) => {
+            const scoreClass = q.average >= 4 ? 'high' : q.average >= 3 ? 'medium' : 'low';
+            html += `
+              <tr>
+                <td>${i + 1}</td>
+                <td>${q.question.substring(0, 80)}...</td>
+                <td class="score ${scoreClass}">${q.average}</td>
+              </tr>
+            `;
+          });
+          html += '</table></div>';
+        }
+      }
+      
+      document.getElementById('content').innerHTML = html;
+    }
+    
+    function calculateAnalysis(responses, headers) {
+      if (!responses || responses.length === 0) return null;
+      
+      const questionCount = headers.length - 1;
+      let grandTotal = 0, grandCount = 0;
+      const distCounts = { '5': 0, '4': 0, '3': 0, '2': 0, '1': 0 };
+      const total = responses.length;
+      
+      responses.forEach(row => {
+        for (let i = 1; i <= questionCount; i++) {
+          const val = parseInt(row[i]);
+          if (!isNaN(val) && val >= 1 && val <= 5) {
+            grandTotal += val;
+            grandCount++;
+            if (distCounts[val] !== undefined) distCounts[val]++;
+          }
+        }
+      });
+      
+      const average = grandCount > 0 ? (grandTotal / grandCount).toFixed(2) : 0;
+      
+      const questionAvg = [];
+      for (let i = 1; i <= questionCount; i++) {
+        let qTotal = 0, qCount = 0;
+        responses.forEach(row => {
+          const val = parseInt(row[i]);
+          if (!isNaN(val)) { qTotal += val; qCount++; }
+        });
+        questionAvg.push({
+          question: headers[i] || 'Q' + i,
+          average: qCount > 0 ? (qTotal / qCount).toFixed(2) : 0
+        });
+      }
+      
+      let rating = 'Average | 一般';
+      if (average >= 4.5) rating = 'Excellent | 优秀';
+      else if (average >= 3.5) rating = 'Good | 良好';
+      else if (average < 2.5) rating = 'Needs Improvement | 需要改进';
+      
+      return { average, distribution: distCounts, total, questionAvg, rating };
+    }
+    
+    function getPercent(val, total) {
+      return total > 0 ? Math.round((val / total) * 100) : 0;
+    }
+    
+    function getRatingClass(avg) {
+      if (avg >= 4.5) return 'excellent';
+      if (avg >= 3.5) return 'good';
+      if (avg >= 2.5) return 'average';
+      return 'poor';
+    }
+    
+    function showError(error) {
+      document.getElementById('content').innerHTML = 
+        '<div style="color: red; text-align: center;">Error: ' + error.message + '</div>';
+    }
+    
+    // Load on page load
+    window.onload = loadData;
+  </script>
+</body>
+</html>
